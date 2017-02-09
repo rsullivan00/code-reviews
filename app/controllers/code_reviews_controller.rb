@@ -2,7 +2,10 @@ class CodeReviewsController < ActionController::Base
   before_action :validate_slack_token
 
   def index
-    render json: GithubInfo.client.code_reviews.to_json
+    formatted_response = GithubInfo.client.code_reviews.map do |code_review|
+      "<#{code_review[:html_url]}|#{code_review[:title]}>"
+    end.join('\n')
+    render text: formatted_response, status: 200
   end
 
   private
