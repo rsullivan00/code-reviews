@@ -3,22 +3,30 @@ class CodeReviewsController < ActionController::Base
 
   def index
     formatted_code_reviews = GithubInfo.client.code_reviews.map do |code_review|
-      "<#{code_review[:html_url]}|#{code_review[:title]}>"
-    end.join("\n")
+      format_code_review(code_review)
+    end
 
     render(
       json: {
         response_type: 'in_channel',
         text: 'Pull requests open for review',
-        attachments: [
-          text: formatted_code_reviews
-        ]
+        attachments: formatted_code_reviews
       },
       status: 200
     )
   end
 
   private
+
+  def format_code_review(code_review)
+    {
+      fallback: code_review[:html_url],
+      title: "<#{code_review[:html_url]}|#{code_review[:title]}>",
+      author_name: code_review[:user][:login],
+      author_link: code_review[:user][:html_url],
+      author_icon: code_review[:user][:avatar_url]
+    }
+  end
 
   def validate_slack_token
     invalid_slack_token! unless params['token'] == ENV['SLACK_TOKEN']

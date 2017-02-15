@@ -34,7 +34,7 @@ class GithubInfo
     @code_reviews ||= @github.issues.list(
       labels: 'Status: Needs Review',
       filter: 'all'
-    ).map { |pull_request| pull_request.slice(:html_url, :title) }
+    ).map { |pull_request| pull_request.slice(:html_url, :title, :user) }
   end
 
   def repos
