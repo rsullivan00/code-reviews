@@ -55,3 +55,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'github_api'
 
 gem 'pry'
+gem 'sucker_punch', '~> 2.0'
