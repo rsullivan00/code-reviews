@@ -29,7 +29,15 @@ class GetCodeReviews
       title: "<#{code_review[:html_url]}|#{code_review[:title]}>",
       author_name: code_review[:user][:login],
       author_link: code_review[:user][:html_url],
-      author_icon: code_review[:user][:avatar_url]
+      author_icon: code_review[:user][:avatar_url],
+      actions: [
+        {
+          name: "reviewing",
+          text: "I'm reviewing!",
+          type: "button",
+          value: "reviewing"
+        }
+      ]
     }
   end
 end
