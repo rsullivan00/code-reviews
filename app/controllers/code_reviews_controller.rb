@@ -13,6 +13,9 @@ class CodeReviewsController < ActionController::Base
     )
   end
 
+  def actions
+  end
+
   private
 
   def validate_slack_token
