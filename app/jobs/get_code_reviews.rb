@@ -30,6 +30,7 @@ class GetCodeReviews
       author_name: code_review[:user][:login],
       author_link: code_review[:user][:html_url],
       author_icon: code_review[:user][:avatar_url],
+      callback_id: code_review[:html_url],
       actions: [
         {
           name: "reviewing",
