@@ -17,9 +17,11 @@ class CodeReviewsController < ActionController::Base
     validate_slack_token(payload['token'])
 
     original_message = payload['original_message']
+    user = payload['user']['name']
     original_message['attackments'] = original_message['attachments'].map do |attachment|
-      if attachment['callback_id'] == payload['callback_id']
-        attachment['text'] = "#{attachment['text']}@#{payload['user']['name']} "
+      if attachment['callback_id'] == payload['callback_id'] &&
+        !(attachment['text'] && attachment['text'].include?(user))
+        attachment['text'] = "#{attachment['text']}#{user} "
       end
       attachment
     end
