@@ -1,14 +1,15 @@
 require 'github_api'
 
 class GithubInfo
-	def self.client
-		@client ||= new(
-			user: ENV['GITHUB_USER'],
-			password: ENV['GITHUB_PASS'],
-			api_url: ENV['GITHUB_API_URL'],
-			organization: 'Portland'
-		)
-	end
+  def self.client
+    @client ||=
+      new(
+        user: ENV['GITHUB_USER'],
+        password: ENV['GITHUB_PASS'],
+        api_url: ENV['GITHUB_API_URL'],
+        organization: ENV['GITHUB_ORG']
+      )
+  end
 
   def initialize(user:, password:, api_url:, organization:)
     Github.configure do |c|
@@ -21,20 +22,21 @@ class GithubInfo
   end
 
   def prs_by_repo
-    @prs_by_repo = repo_names.map do |repo_name|
-      repo_pulls = @github.pulls.list(user: @organization, repo: repo_name)
-      prs = repo_pulls.map do |rp|
-        { user: rp.dig(:assignee, :login), title: rp.dig(:title) }
-      end
-      { repo: repo_name, prs: prs } unless prs.empty?
-    end.compact
+    @prs_by_repo =
+      repo_names.map do |repo_name|
+        repo_pulls = @github.pulls.list(user: @organization, repo: repo_name)
+        prs =
+          repo_pulls.map do |rp|
+            { user: rp.dig(:assignee, :login), title: rp.dig(:title) }
+          end
+        { repo: repo_name, prs: prs } unless prs.empty?
+      end.compact
   end
 
-	def code_reviews
-    @code_reviews ||= @github.issues.list(
-      labels: 'Status: Needs Review',
-      filter: 'all'
-    ).map { |pull_request| pull_request.slice(:html_url, :title, :user) }
+  def code_reviews
+    @code_reviews ||=
+      @github.issues.list(labels: 'Status: Needs Review', filter: 'all')
+        .map { |pull_request| pull_request.slice(:html_url, :title, :user) }
   end
 
   def repos
